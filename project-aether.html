@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Aether</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #f2f0ea;
+    --surface: #ffffff;
+    --surface-alt: #e8e3d7;
+    --ink: #233030;
+    --ink-soft: #57635f;
+    --ink-faint: #8a8f89;
+    --accent-teal: #2e6b70;
+    --accent-teal-soft: #dfeaea;
+    --accent-sage: #5f7f57;
+    --accent-sage-soft: #e3eadd;
+    --accent-amber: #97662a;
+    --accent-amber-soft: #f1e3cf;
+    --border: #dad3c1;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #142020;
+      --surface: #1c2928;
+      --surface-alt: #223330;
+      --ink: #ece8dd;
+      --ink-soft: #a8b0aa;
+      --ink-faint: #74807a;
+      --accent-teal: #74c1c6;
+      --accent-teal-soft: #223f40;
+      --accent-sage: #9fc596;
+      --accent-sage-soft: #263a25;
+      --accent-amber: #e3ac6d;
+      --accent-amber-soft: #3a2f1e;
+      --border: #2d3c39;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #142020;
+    --surface: #1c2928;
+    --surface-alt: #223330;
+    --ink: #ece8dd;
+    --ink-soft: #a8b0aa;
+    --ink-faint: #74807a;
+    --accent-teal: #74c1c6;
+    --accent-teal-soft: #223f40;
+    --accent-sage: #9fc596;
+    --accent-sage-soft: #263a25;
+    --accent-amber: #e3ac6d;
+    --accent-amber-soft: #3a2f1e;
+    --border: #2d3c39;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Public Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: "Newsreader", ui-serif, Georgia, serif;
+    color: var(--ink);
+    font-weight: 500;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  a { color: inherit; }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-teal);
+    display: block;
+    margin-bottom: 0.9rem;
+  }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--accent-teal);
+    color: var(--surface);
+    padding: 0.6rem 1rem;
+    border-radius: 0 0 8px 0;
+    z-index: 100;
+  }
+  .skip-link:focus { left: 0; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-teal);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Nav ---------- */
+  header.site {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.05rem 0;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: "Newsreader", serif;
+    font-size: 1.28rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--accent-teal), var(--accent-sage) 130%);
+    flex-shrink: 0;
+  }
+
+  nav.primary {
+    display: flex;
+    gap: 1.9rem;
+    flex-wrap: wrap;
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  nav.primary a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding: 0.3rem 0.05rem;
+    border-bottom: 1.5px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  nav.primary a:hover { color: var(--accent-teal); border-color: var(--accent-teal); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 5.5rem 0 5rem;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3.5rem;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.3rem, 4.2vw, 3.4rem);
+    line-height: 1.12;
+  }
+
+  .hero h1 em { color: var(--accent-teal); font-style: italic; }
+
+  .hero p.lede {
+    margin: 1.4rem 0 0;
+    max-width: 46ch;
+    color: var(--ink-soft);
+    font-size: 1.09rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 0.9rem;
+    margin-top: 2.1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: "Public Sans", sans-serif;
+    font-size: 0.94rem;
+    font-weight: 600;
+    padding: 0.8rem 1.4rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+
+  .btn-primary { background: var(--accent-teal); color: var(--surface); }
+  .btn-primary:hover { background: color-mix(in srgb, var(--accent-teal) 88%, black); }
+
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--accent-teal); color: var(--accent-teal); }
+
+  .trust-chips {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 2.2rem;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .chip svg { width: 13px; height: 13px; color: var(--accent-sage); flex-shrink: 0; }
+
+  .hero-art {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-art svg { width: 100%; height: 100%; }
+  .pulse-ring {
+    transform-origin: center;
+    animation: pulse 3.6s ease-in-out infinite;
+  }
+  .pulse-ring.delay { animation-delay: 1.2s; }
+  .pulse-ring.delay2 { animation-delay: 2.4s; }
+  @keyframes pulse {
+    0% { opacity: 0.55; transform: scale(0.94); }
+    50% { opacity: 0.15; transform: scale(1.06); }
+    100% { opacity: 0; transform: scale(1.18); }
+  }
+
+  /* ---------- Section shell ---------- */
+  section { padding: 4.6rem 0; }
+  .section-head { max-width: 62ch; margin-bottom: 3rem; }
+  .section-head h2 { font-size: clamp(1.7rem, 2.6vw, 2.2rem); }
+  .section-head p { margin: 0.9rem 0 0; color: var(--ink-soft); font-size: 1.03rem; }
+
+  .alt-band { background: var(--surface-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  /* ---------- Process flow ---------- */
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: start;
+    gap: 0 0.5rem;
+  }
+
+  .flow-connector {
+    height: 2px;
+    background: repeating-linear-gradient(to right, var(--accent-teal) 0 8px, transparent 8px 14px);
+    margin-top: 34px;
+    min-width: 24px;
+  }
+
+  .node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.3rem;
+    text-align: left;
+    position: relative;
+  }
+
+  .node-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--accent-teal-soft);
+    color: var(--accent-teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .node-icon svg { width: 22px; height: 22px; }
+
+  .node .step-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .node h3 { font-size: 1.08rem; font-weight: 600; font-family: "Public Sans", sans-serif; }
+  .node p { margin: 0.55rem 0 0; color: var(--ink-soft); font-size: 0.92rem; }
+
+  button.node-trigger {
+    all: unset;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+  }
+  button.node-trigger:focus-visible { outline: 2px solid var(--accent-teal); outline-offset: 4px; border-radius: 14px; }
+
+  .node-clickable { border-color: var(--accent-teal); }
+  .node-clickable .step-label { color: var(--accent-teal); }
+  .node-clickable .step-label::after { content: " · click to expand"; color: var(--ink-faint); }
+
+  .popover {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    background: var(--accent-teal-soft);
+    border: 1px solid var(--accent-teal);
+    border-radius: 10px;
+  }
+  .popover.open { display: block; }
+  .popover strong { display: block; font-size: 0.88rem; margin-bottom: 0.35rem; color: var(--accent-teal); }
+  .popover p { color: var(--ink); font-size: 0.87rem; margin: 0; }
+
+  @media (max-width: 860px) {
+    .flow { grid-template-columns: 1fr; }
+    .flow-connector { width: 2px; height: 24px; margin: 0 0 0 21px; background: repeating-linear-gradient(to bottom, var(--accent-teal) 0 8px, transparent 8px 14px); }
+  }
+
+  /* ---------- Benefit / Risk cards ---------- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.8rem;
+  }
+  @media (max-width: 780px) { .card-grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    border-radius: 16px;
+    padding: 2rem 2rem 1.8rem;
+    border: 1px solid var(--border);
+  }
+  .panel.benefits { background: var(--accent-sage-soft); }
+  .panel.risks { background: var(--accent-amber-soft); }
+
+  .panel h3 {
+    font-family: "Newsreader", serif;
+    font-size: 1.4rem;
+    margin-bottom: 1.4rem;
+  }
+  .panel.benefits h3 { color: var(--accent-sage); }
+  .panel.risks h3 { color: var(--accent-amber); }
+
+  .panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.1rem; }
+  .panel li { display: flex; gap: 0.85rem; align-items: flex-start; }
+  .panel .item-icon {
+    width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface);
+  }
+  .panel.benefits .item-icon { color: var(--accent-sage); }
+  .panel.risks .item-icon { color: var(--accent-amber); }
+  .panel .item-icon svg { width: 17px; height: 17px; }
+  .panel li h4 { margin: 0 0 0.2rem; font-size: 0.97rem; font-weight: 600; }
+  .panel li p { margin: 0; font-size: 0.87rem; color: var(--ink-soft); }
+
+  /* ---------- Compact info sections (privacy / ethics / about) ---------- */
+  .trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+  }
+  @media (max-width: 780px) { .trio { grid-template-columns: 1fr; } }
+
+  .trio .cell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+  }
+  .trio .cell .tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--accent-teal);
+    text-transform: uppercase;
+  }
+  .trio .cell h4 { margin: 0.5rem 0 0.4rem; font-size: 1rem; font-family: "Public Sans", sans-serif; font-weight: 600; }
+  .trio .cell p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+
+  .about-copy { max-width: 68ch; color: var(--ink-soft); font-size: 1.02rem; }
+  .about-copy p + p { margin-top: 1rem; }
+
+  /* ---------- Footer ---------- */
+  footer.site {
+    border-top: 1px solid var(--border);
+    padding: 3.4rem 0 2.4rem;
+    background: var(--surface-alt);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2.2rem;
+  }
+  @media (max-width: 700px) { .footer-grid { grid-template-columns: 1fr; } }
+
+  .footer-grid h5 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 0.9rem;
+  }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-grid a { text-decoration: none; color: var(--ink-soft); font-size: 0.9rem; }
+  .footer-grid a:hover { color: var(--accent-teal); }
+  .footer-grid p.foot-lede { color: var(--ink-soft); font-size: 0.88rem; max-width: 34ch; margin: 0; }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 1.4rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    font-family: "IBM Plex Mono", monospace;
+  }
+</style>
+</head>
+<body>
+
+<a href="#how-it-works" class="skip-link">Skip to content</a>
+
+<header class="site">
+  <div class="wrap nav-row">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true"></span>
+      Aether
+    </a>
+    <nav class="primary" aria-label="Primary">
+      <a href="#how-it-works">How It Works</a>
+      <a href="#benefits-risks">Benefits &amp; Risks</a>
+      <a href="#data-privacy">Your Data &amp; Privacy</a>
+      <a href="#ethics">Our Ethics</a>
+      <a href="#about">About Us</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero">
+      <div>
+        <span class="eyebrow">Personalized health, ethically built</span>
+        <h1>Your personalized health journey, <em>ethically guided</em>.</h1>
+        <p class="lede">Aether looks for patterns in your anonymized health data and hands a clear, reviewed summary to your doctor — never a diagnosis, never a decision made without you.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#how-it-works">See how it works</a>
+          <a class="btn btn-ghost" href="#ethics">Read our ethics commitments</a>
+        </div>
+        <div class="trust-chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>Clinician-reviewed</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Anonymized by default</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>You control your data</span>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 320 320">
+          <circle class="pulse-ring" cx="160" cy="160" r="70" fill="none" stroke="#2e6b70" stroke-width="1.5"/>
+          <circle class="pulse-ring delay" cx="160" cy="160" r="70" fill="none" stroke="#2e6b70" stroke-width="1.5"/>
+          <circle class="pulse-ring delay2" cx="160" cy="160" r="70" fill="none" stroke="#5f7f57" stroke-width="1.5"/>
+          <circle cx="160" cy="160" r="58" fill="var(--surface)" stroke="var(--border)"/>
+          <path d="M132 160h14l10 -26 14 46 10 -20h18" fill="none" stroke="var(--accent-teal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Understanding the process</h2>
+        <p>Three steps, always visible to you and your care team. Nothing happens between them that isn't explained here.</p>
+      </div>
+
+      <div class="flow">
+        <div class="node">
+          <span class="step-label">Step 1</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          </div>
+          <h3>Data Input</h3>
+          <p>Your records are encrypted in transit and anonymized before Aether ever processes them.</p>
+        </div>
+
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <div class="node node-clickable">
+          <button class="node-trigger" id="step2-trigger" aria-expanded="false" aria-controls="step2-popover">
+            <span class="step-label">Step 2</span>
+            <div class="node-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8 11l8-4M8 13l8 4"/></svg>
+            </div>
+            <h3>Aether AI Analysis</h3>
+            <p>Statistical pattern-matching across the anonymized data — tap to see exactly what this step does and doesn't do.</p>
+          </button>
+          <div class="popover" id="step2-popover" role="region" aria-live="polite">
+            <strong>Pattern recognition, not diagnosis</strong>
+            <p>Aether flags statistical patterns worth a closer look. It does not name a condition or suggest a treatment — every flag is reviewed by a licensed clinician before anyone sees it.</p>
+          </div>
+        </div>
+
+        <div class="flow-connector" aria-hidden="true"></div>
+
+        <div class="node">
+          <span class="step-label">Step 3</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <h3>Personalized Insight</h3>
+          <p>Your doctor gets a clear, reviewed summary to walk through with you — the final call is always theirs and yours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="benefits-risks" class="alt-band">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Benefits &amp; risks</span>
+        <h2>A clear-eyed view, both ways</h2>
+        <p>We'd rather you understand the trade-offs than take our word for it.</p>
+      </div>
+
+      <div class="card-grid">
+        <div class="panel benefits">
+          <h3>Explore the benefits</h3>
+          <ul>
+            <li>
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.9 9 2.6 5.5 6 5.2c2-.2 3.7 1 4.9 2.6C12.1 6.2 13.8 5 15.8 5.2c3.4.3 5.1 3.8 3.5 7.3C16.9 16.6 12 21 12 21z"/></svg></span>
+              <div><h4>Tailored plans</h4><p>Recommendations shaped by your own history, not a generic protocol.</p></div>
+            </li>
+            <li>
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg></span>
+              <div><h4>Early detection</h4><p>Surfaces patterns worth a second look, sooner than a routine visit might catch them.</p></div>
+            </li>
+            <li>
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <div><h4>Care-team alignment</h4><p>Every insight reaches your doctor alongside you, not you alone.</p></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="panel risks">
+          <h3>Understand the risks</h3>
+          <ul>
+            <li>
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8l-3 6a4 4 0 0 0 6 0l-3-6zM19 8l-3 6a4 4 0 0 0 6 0l-3-6zM7 21h10"/></svg></span>
+              <div><h4>Algorithmic bias</h4><p>Models trained on limited data can perform unevenly across groups. We audit quarterly and publish the results.</p></div>
+            </li>
+            <li>
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+              <div><h4>Data security</h4><p>Any connected system carries some risk. We minimize what we collect and encrypt everything we hold.</p></div>
+            </li>
+            <li>
+              <span class="item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span>
+              <div><h4>Over-reliance</h4><p>Aether supports your doctor's judgment. It should never replace a conversation with them.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="data-privacy">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Your data &amp; privacy</span>
+        <h2>You decide what's shared</h2>
+        <p>Privacy isn't a settings page you find later — it's built into how Aether handles data from the first step.</p>
+      </div>
+      <div class="trio">
+        <div class="cell">
+          <span class="tag">Default</span>
+          <h4>Anonymized before analysis</h4>
+          <p>Identifying details are stripped before any pattern-matching happens, not after.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">Your choice</span>
+          <h4>Opt in to specifics</h4>
+          <p>Sharing a named record with your own doctor is something you turn on, never a default.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">Always</span>
+          <h4>Delete on request</h4>
+          <p>Ask and your data is removed from active analysis. We never sell it to advertisers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ethics" class="alt-band">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Our ethics</span>
+        <h2>Principles we're held to</h2>
+        <p>These aren't marketing lines — they're the commitments our Ethics Officer audits us against.</p>
+      </div>
+      <div class="trio">
+        <div class="cell">
+          <span class="tag">01</span>
+          <h4>Human oversight, always</h4>
+          <p>No insight reaches a patient without a licensed clinician reviewing it first.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">02</span>
+          <h4>Bias audited, published</h4>
+          <p>Performance across demographic groups is checked quarterly and the results are public.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">03</span>
+          <h4>Explainable by design</h4>
+          <p>Every recommendation traces back to the specific data behind it — no black boxes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">About us</span>
+        <h2>Why we're building this in the open</h2>
+      </div>
+      <div class="about-copy">
+        <p>Project Aether started from a simple frustration: health tools that use AI rarely explain what the AI is actually doing. We think trust is earned by showing the mechanism, not hiding it — so every page on this site exists to answer a question a patient would reasonably ask.</p>
+        <p>We're a small team of clinicians, data scientists, and a dedicated Ethics Officer who has veto power over anything that ships. If something here doesn't add up, that's exactly what the contact link below is for.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <span class="brand" style="margin-bottom: 0.8rem; display: inline-flex;"><span class="brand-mark" aria-hidden="true"></span>Aether</span>
+        <p class="foot-lede">Personalized health support, built so you can see how every recommendation was reached.</p>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Full Privacy Policy</a></li>
+          <li><a href="#">Informed Consent Process</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#">Contact the Ethics Officer</a></li>
+          <li><a href="#about">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Project Aether</span>
+      <span>Design concept — not an active medical service</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const trigger = document.getElementById('step2-trigger');
+  const popover = document.getElementById('step2-popover');
+  trigger.addEventListener('click', () => {
+    const open = popover.classList.toggle('open');
+    trigger.setAttribute('aria-expanded', String(open));
+  });
+</script>
+</body>
+</html>
